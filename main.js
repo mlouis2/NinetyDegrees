@@ -53,6 +53,11 @@ class Board {
           let turnArrows = new Image();
           turnArrows.src = "./images/turnArrows.png";
           ctx.drawImage(turnArrows, this.size + this.offset, this.buttonY, this.flipButtonWidth, this.flipButtonWidth);
+
+          ctx.fillStyle = "black";
+          ctx.font = '100px Passero One';
+          ctx.fillText("Ninety Degrees", this.offset, this.size + (this.offset * 3));
+
      }
      printWinText(winNum) {
           ctx.fillStyle = "white";
@@ -75,7 +80,7 @@ class Board {
           ctx.fillStyle = "white";
           ctx.fillRect(this.size + (this.offset), this.textY- this.offset, 400, 400);
           ctx.fillStyle = "black";
-          ctx.font = "30px Tahoma";
+          ctx.font = '50px Passero One';
           ctx.fillText((game.playerNames[game.currentPlayerIndex]).toUpperCase() + "\'s turn!", this.size + (this.offset * 2), this.textY);
 
      }
@@ -226,7 +231,7 @@ function mouseClick(event) {
      mouse.x = event.clientX;
      mouse.y = event.clientY;
      if (game.gameOver === false) {
-          if (mouse.y > 10 && mouse.y < 50) {
+          if (mouse.y > 60 && mouse.y < (60 + board.size)) {
                if (mouse.x > 60 && mouse.x < 660) {
                     game.players[game.currentPlayerIndex].placePiece();
                     if (board.checkWin() !== 0) {
