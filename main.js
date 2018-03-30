@@ -13,7 +13,6 @@ class Game {
           for (let i = 1; i < numPlayers + 1; i++) {
                this.players.push(new Player(i, playerNames[i - 1]));
           }
-
           this.currentPlayerIndex = 0;
      }
 }
@@ -40,19 +39,12 @@ class Board {
           let downArrow = new Image();
           downArrow.src = "./images/downArrow.png";
 
-          //draw buttons
-          for (let x = 0; x < game.gridSize; x++) {
-               ctx.fillStyle = 'black';
-               ctx.fillRect((this.offset * x) + this.offset + this.buttonSpacing, this.buttonY, this.buttonWidth, this.buttonWidth);
-               ctx.drawImage(downArrow, (this.offset * x) + this.offset + this.buttonSpacing, this.buttonY, this.buttonWidth, this.buttonWidth);
-          }
-
           //draw flip button
           ctx.fillStyle = 'black';
           ctx.fillRect(this.size + this.offset, this.buttonY, this.flipButtonWidth, this.flipButtonWidth);
           let turnArrows = new Image();
           turnArrows.src = "./images/turnArrows.png";
-          ctx.drawImage(turnArrows, this.size + this.offset, this.buttonY, this.flipButtonWidth, this.flipButtonWidth);
+          ctx.drawImage(turnArrows, this.size + this.offset , this.buttonY, this.flipButtonWidth, this.flipButtonWidth);
 
           ctx.fillStyle = "black";
           ctx.font = '100px Passero One';
@@ -85,6 +77,20 @@ class Board {
 
      }
 
+     print(grid) {
+
+          let result = "";
+          for (let row = 0; row < game.gridSize; row++) {
+               for (let col = 0; col < game.gridSize; col++) {
+                    result += grid[col][row] + " ";
+               }
+               result += "\n";
+          }
+
+          console.log(result);
+
+     }
+
      findSpot(col, playerNumber) {
           for (let i = game.gridSize - 1; i >= 0; i--) {
                if (this.grid[col][i] === 0) {
@@ -104,6 +110,37 @@ class Board {
                     result[i][j] = 0;
                }
           }
+
+          // result[8][8] = 1;
+          // result[8][7] = 1;
+          // result[8][6] = 1;
+          // result[8][5] = 1;
+          // result[8][4] = 1;
+          // result[7][8] = 2;
+          // result[6][8] = 2;
+          // result[5][8] = 2;
+          // result[4][8] = 2;
+          // result[3][8] = 2;
+
+          //2 blue 1 yellow
+
+          // result[1][8] = 1;
+          // result[2][8] = 2;
+          // result [2][7] = 2;
+          // result [3][8] = 2;
+          // result [3][7] = 2;
+          // result [4][4] = 2;
+          // result [4][5] = 1;
+          // result [4][6] = 1;
+          // result [4][7] = 1;
+          // result [4][8] = 2;
+          // result [5][6] = 1;
+          // result [5][7] = 2;
+          // result [5][8] = 2;
+          // result [6][7] = 1;
+          // result [6][8] = 1;
+          // result [7][8] = 1;
+
 
           // //FOR TESTING
           // result[0][1] = 1;
@@ -150,58 +187,148 @@ class Board {
           this.grid = turnedBoard;
           this.draw();
      }
-     checkWin() {
-          //check horizontals and verticals
-          let horizontalRunCount = 0, verticalRunCount = 0;
-          let verticalWinner = 0, horizontalWinner = 0;
-          for (let i = 0; i < game.gridSize; i++) {
-               for (let j = game.gridSize - 1; j > 1; j--) {
-                    if ((this.grid[i][j] !== 0) && (this.grid[i][j] === this.grid[i][j - 1])) {
+     checkHorizontals(grid) {
+          let horizontalRunCount = 0;
+          for (let col = 0; col < game.gridSize; col++) {
+               for (let row = 0; row < game.gridSize - 1; row++) {
+                    if (grid[row][col] != 0 && grid[row][col] == grid[row + 1][col]) {
                          horizontalRunCount++;
-                         horizontalWinner = this.grid[i][j];
+                    } else {
+                         horizontalRunCount = 0;
                     }
-                    if ((this.grid[j][i] !== 0) && (this.grid[j][i] === this.grid[j - 1][i])) {
-                         verticalRunCount++;
-                         verticalWinner = this.grid[j][i];
+                    if (horizontalRunCount >= (game.numToWin -1)) {
+                         return grid[row][col];
                     }
                }
-               if (verticalRunCount >= game.numToWin - 1) {
-                    return verticalWinner;
-               }
-               if (horizontalRunCount >= game.numToWin - 1) {
-                    return horizontalWinner;
-               }
-               verticalWinner = 0;
-               horizontalWinner = 0;
                horizontalRunCount = 0;
+          }
+          return 0;
+     }
+     checkVerticals(grid) {
+          let verticalRunCount = 0;
+          for (let row = 0; row < game.gridSize; row++) {
+               for (let col = 0; col < game.gridSize - 1; col++) {
+                    if (grid[row][col] != 0 && grid[row][col] == grid[row][col + 1]) {
+                         verticalRunCount++;
+                    } else {
+                         verticalRunCount = 0;
+                    }
+                    if (verticalRunCount >= (game.numToWin -1)) {
+                         return grid[row][col];
+                    }
+               }
                verticalRunCount = 0;
           }
+          return 0;
+     }
 
-          // let diagRunCount = 0;
-          // let diagWinner = 0;
-          let majorDiagRunCount = 0;
-          let minorDiagRunCount = 0;
-          let minorDiagWinner = 0;
-          let majorDiagWinner = 0;
+     checkGrid(grid) {
+          for (let list of grid) {
+               if (this.checkList(list) !== 0) {
+                    return this.checkList(list);
+               }
+          }
+          return 0;
+     }
 
+     checkList(list) {
+          let run = 0;
+          for (let x = 0; x < list.length - 1; x++) {
+               if (list[x] !== 0 && list[x] === list[x+1]) {
+                    run++;
+               } else {
+                    run = 0;
+               }
+               if (run >= (game.numToWin - 1)) {
+                    return list[x];
+               }
+          }
+          return 0;
+     }
 
-          //check first diagonal \
-          // for (let x = 0; x < game.gridSize - 1; x++) {
-          //      for (let y = 0; y < game.gridSize - 1; y++) {
-          //           if (this.grid[y + x][y + x] !== 0 && this.grid[y + x][y + x] === this.grid[y + x + 1][y + x + 1]) {
-          //                diagRunCount++;
-          //                console.log('current diagRunCount is ' + diagRunCount);
-          //                diagWinner = this.grid[y + x][y + x];
-          //           }
-          //      }
-          //      if (diagRunCount >= game.numToWin - 1) {
-          //           return diagWinner;
-          //      }
-          //      diagRunCount = 0;
-          //      diagWinner = 0;
-          // }
+     checkDiagonals() {
+          let diagonals = this.getDiagonals();
+          return this.checkGrid(diagonals);
+     }
 
-          //check second diagonal \
+     getDiagonals() {
+          let diagonals = [];
+
+          for (let row = game.gridSize - 1; row >= 0; row--) {
+               let currRow = row;
+               let currCol = 0;
+               let diagonal = [];
+               while(this.isValidPosition(currRow, currCol)) {
+                    diagonal.push(this.grid[currRow][currCol]);
+                    currRow += 1;
+                    currCol += 1;
+               }
+               diagonals.push(diagonal);
+          }
+
+          for (let col = 0; col <= game.gridSize; col++) {
+               let currRow = 0;
+               let currCol = col;
+               let diagonal = [];
+               while(this.isValidPosition(currRow, currCol)) {
+                    diagonal.push(this.grid[currRow][currCol]);
+                    currRow += 1;
+                    currCol += 1;
+               }
+               diagonals.push(diagonal);
+          }
+
+          for (let row = game.gridSize - 1; row >= 0; row--) {
+               let currRow = row;
+               let currCol = 0;
+               let diagonal = [];
+               while(this.isValidPosition(currRow, currCol)) {
+                    diagonal.push(this.grid[currRow][currCol]);
+                    currRow -= 1;
+                    currCol += 1;
+               }
+               diagonals.push(diagonal);
+          }
+
+          for (let col = 0; col <= game.gridSize; col++) {
+               let currRow = game.gridSize - 1;
+               let currCol = col;
+               let diagonal = [];
+               while(this.isValidPosition(currRow, currCol)) {
+                    diagonal.push(this.grid[currRow][currCol]);
+                    currRow -= 1;
+                    currCol += 1;
+               }
+               diagonals.push(diagonal);
+          }
+
+          return diagonals;
+     }
+
+     isValidPosition(row, col) {
+        return ((row < game.gridSize && col < game.gridSize) && (row >= 0 && col >=0));
+     }
+
+     checkWin() {
+
+          let potentialWinner = 0;
+
+          potentialWinner = this.checkVerticals(this.grid);
+          if (potentialWinner !== 0) {
+               console.log("regular vertical");
+               return potentialWinner;
+          }
+          potentialWinner = this.checkHorizontals(this.grid);
+          if (potentialWinner !== 0) {
+               console.log("regular horizontal");
+               return potentialWinner;
+          }
+
+          potentialWinner = this.checkDiagonals(this.grid);
+          if (potentialWinner !== 0) {
+               console.log("diagonal");
+               return potentialWinner;
+          }
 
 
           return 0;
@@ -260,7 +387,7 @@ function mouseClick(event) {
 // let playerNames = ["Maddie", "Leigh", "Merissa", "Ryan"];
 
 let numPlayers = 2;
-let playerNames = ["Maddie", "Leigh"];
+let playerNames = ["blue", "yellow"];
 
 let game = new Game(numPlayers, playerNames);
 let mouse = {x: 0, y: 0};
