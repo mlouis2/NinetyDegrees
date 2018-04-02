@@ -111,45 +111,6 @@ class Board {
                }
           }
 
-          // result[8][8] = 1;
-          // result[8][7] = 1;
-          // result[8][6] = 1;
-          // result[8][5] = 1;
-          // result[8][4] = 1;
-          // result[7][8] = 2;
-          // result[6][8] = 2;
-          // result[5][8] = 2;
-          // result[4][8] = 2;
-          // result[3][8] = 2;
-
-          //2 blue 1 yellow
-
-          // result[1][8] = 1;
-          // result[2][8] = 2;
-          // result [2][7] = 2;
-          // result [3][8] = 2;
-          // result [3][7] = 2;
-          // result [4][4] = 2;
-          // result [4][5] = 1;
-          // result [4][6] = 1;
-          // result [4][7] = 1;
-          // result [4][8] = 2;
-          // result [5][6] = 1;
-          // result [5][7] = 2;
-          // result [5][8] = 2;
-          // result [6][7] = 1;
-          // result [6][8] = 1;
-          // result [7][8] = 1;
-
-
-          // //FOR TESTING
-          // result[0][1] = 1;
-          // result[1][2] = 1;
-          // result[2][3] = 1;
-          // result[3][4] = 1;
-          // result[4][5] = 1;
-          // //FOR TESTING
-
           return result;
      }
 
@@ -377,17 +338,11 @@ function mouseClick(event) {
      }
 }
 
-// let numPlayers = parseInt(prompt("How many players? (2-4)"));
-// let playerNames = [];
-// for (let i = 1; i < numPlayers + 1; i++) {
-//      playerNames.push(prompt("What is player " + i + "\'s name?"))
-// }
-
-// let numPlayers = 4;
-// let playerNames = ["Maddie", "Leigh", "Merissa", "Ryan"];
-
 let numPlayers = 2;
-let playerNames = ["blue", "yellow"];
+let playerNames = [];
+for (let i = 1; i < numPlayers + 1; i++) {
+     playerNames.push(prompt("What is player " + i + "\'s name?"))
+}
 
 let game = new Game(numPlayers, playerNames);
 let mouse = {x: 0, y: 0};
