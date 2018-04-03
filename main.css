@@ -3,3 +3,31 @@
     src: url('https://fonts.googleapis.com/css?family=Bungee+Shade');
 } */
 @import url(https://fonts.googleapis.com/css?family=Passero+One);
+@import url(https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed);
+
+canvas {
+     float: left;
+}
+#playerValues {
+     float: right;
+     font-family: 'IBM Plex Sans Condensed', sans-serif;
+     margin-right: 50px;
+     font-size:30px;
+}
+#submitButton, #restartGameButton {
+    width: 100px;
+    height: 40px;
+    font-size: 20px;
+    color: white;
+    margin-top: 20px;
+    padding:5px 15px;
+    background:#CB3D3D;
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#restartGameButton {
+    width: 150px;
+}

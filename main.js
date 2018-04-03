@@ -29,33 +29,36 @@ class Board {
           this.textY = 120;
 
           this.grid = this.createEmptyGrid();
-          this.pieceColors = ['white', 'blue', 'yellow', 'green', 'red'];
+          this.pieceColors = ['white', '#CB3D3D', '#4F62B1', 'green', 'red'];
      }
      drawBackground() {
           ctx.fillStyle = 'black';
           //draw background
           ctx.fillRect(this.offset, this.offset, this.size, this.size);
 
-          let downArrow = new Image();
-          downArrow.src = "./images/downArrow.png";
-
           //draw flip button
           ctx.fillStyle = 'black';
           ctx.fillRect(this.size + this.offset, this.buttonY, this.flipButtonWidth, this.flipButtonWidth);
           let turnArrows = new Image();
           turnArrows.src = "./images/turnArrows.png";
+          turnArrows.onload = function() {
+               ctx.drawImage(turnArrows, this.size + this.offset , this.buttonY, this.flipButtonWidth, this.flipButtonWidth);
+          };
           ctx.drawImage(turnArrows, this.size + this.offset , this.buttonY, this.flipButtonWidth, this.flipButtonWidth);
 
+          ctx.fillStyle = "white";
+          ctx.fillRect(this.offset, this.size + this.offset, this.offset * 12, this.offset * 4);
           ctx.fillStyle = "black";
-          ctx.font = '100px Passero One';
+          ctx.font = '90px Passero One';
           ctx.fillText("Ninety Degrees", this.offset, this.size + (this.offset * 3));
 
      }
      printWinText(winNum) {
           ctx.fillStyle = "white";
-          ctx.fillRect(this.size + (this.offset), this.textY- this.offset, 400, 400);
+          ctx.fillRect(0, 0, this.offset * 10, this.offset);
           ctx.fillStyle = 'black';
-          ctx.fillText(game.playerNames[winNum - 1].toUpperCase() + " has won!", this.size + (this.offset * 2), (this.textY));
+          ctx.font = '40px Passero One';
+          ctx.fillText(game.playerNames[winNum - 1].toUpperCase() + " has won!", this.offset, this.buttonY * 4);
           game.gameOver = true;
      }
      draw() {
@@ -70,11 +73,10 @@ class Board {
 
           //Whose turn it is
           ctx.fillStyle = "white";
-          ctx.fillRect(this.size + (this.offset), this.textY- this.offset, 400, 400);
+          ctx.fillRect(0, 0, this.offset * 10, this.offset);
           ctx.fillStyle = "black";
-          ctx.font = '50px Passero One';
-          ctx.fillText((game.playerNames[game.currentPlayerIndex]).toUpperCase() + "\'s turn!", this.size + (this.offset * 2), this.textY);
-
+          ctx.font = '40px Passero One';
+          ctx.fillText((game.playerNames[game.currentPlayerIndex]).toUpperCase() + "\'s turn!", this.offset, this.buttonY * 4);
      }
 
      print(grid) {
@@ -338,12 +340,25 @@ function mouseClick(event) {
      }
 }
 
-let numPlayers = 2;
-let playerNames = [];
-for (let i = 1; i < numPlayers + 1; i++) {
-     playerNames.push(prompt("What is player " + i + "\'s name?"))
+function setPlayerValues() {
+     playerNames[0] = document.getElementById("playerOneName").value;
+     playerNames[1] = document.getElementById("playerTwoName").value;
+     board.draw();
 }
 
+function resetGame() {
+     game.gameOver = false;
+     board.grid = board.createEmptyGrid();
+     board.currentPlayerIndex = 0;
+     board.drawBackground();
+     board.draw();
+}
+
+let numPlayers = 2;
+let playerNames = ["Red", "Blue"];
+
+document.getElementById("submitButton").addEventListener("click", setPlayerValues);
+document.getElementById("restartGameButton").addEventListener("click", resetGame);
 let game = new Game(numPlayers, playerNames);
 let mouse = {x: 0, y: 0};
 let board = new Board();
